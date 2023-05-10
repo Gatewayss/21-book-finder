@@ -13,7 +13,7 @@ mutation createUser($username: String!, $email: String!, $password: String!) {
   }
   `;
 
-export const LOGIN = gql`
+export const LOGIN_USER = gql`
 mutation login($input: LoginInput!) {
   login(input: $input) {
     token
