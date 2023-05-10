@@ -1,8 +1,5 @@
 import React, { useState } from 'react';
 import { Form, Button, Alert } from 'react-bootstrap';
-
-// import { createUser } from '../utils/API';
-
 import { useMutation } from '@apollo/client';
 import { CREATE_USER } from '../utils/mutations';
 
@@ -11,13 +8,17 @@ import Auth from '../utils/auth';
 const SignupForm = () => {
   // set initial form state
   const [userFormData, setUserFormData] = useState({ username: '', email: '', password: '' });
+
   // set state for form validation
   const [validated] = useState(false);
+
   // set state for alert
   const [showAlert, setShowAlert] = useState(false);
 
+  // set the create user query 
   const [addUser, { error, data }] = useMutation(CREATE_USER);
 
+  // grabs all the name and values form the input fields and updates them in the userFormData state
   const handleInputChange = (event) => {
     const { name, value } = event.target;
     setUserFormData({ ...userFormData, [name]: value });
@@ -28,6 +29,7 @@ const SignupForm = () => {
     console.log(userFormData);
 
     try {
+      // We wait for user to be created with the query, using variables to pass that data in. We use object destructuring to grab the token for Auth login(). 
       const { data } = await addUser({
         variables: { ...userFormData },
       });
@@ -38,6 +40,7 @@ const SignupForm = () => {
       setShowAlert(true);
     }
 
+    // Sets form back to initial state
     setUserFormData({
       username: '',
       email: '',
