@@ -7,6 +7,7 @@ mutation createUser($username: String!, $email: String!, $password: String!) {
       user {
         _id
         username
+        email
       }
     }
   }
