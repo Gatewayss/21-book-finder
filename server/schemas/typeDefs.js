@@ -23,13 +23,21 @@ type Auth {
   user: User
 }
 
-type Query {
-  getSingleUser(user: ID, params: GetSingleUserParams): User
+input BookInput {
+  authors: [String]
+  description: String
+  image: String
+  link: String
+  title: String!
 }
 
-input GetSingleUserParams {
-  id: ID
-  username: String
+input LoginInput {
+  email: String!
+  password: String!
+}
+
+type Query {
+  getSingleUser: User
 }
 
 type Mutation {
@@ -37,21 +45,6 @@ type Mutation {
   login(input: LoginInput!): Auth
   saveBook(body: BookInput!): User
   deleteBook(bookId: String!): User
-}
-
-input LoginInput {
-  username: String!
-  email: String!
-  password: String!
-}
-
-input BookInput {
-  bookId: String!
-  authors: [String]
-  description: String
-  image: String
-  link: String
-  title: String!
 }
 `;
 
