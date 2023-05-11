@@ -15,27 +15,44 @@ import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
-  const [userData, setUserData] = useState(null);
+  const { loading, data } = useQuery(QUERY_SINGLEUSER)
+  const userData = data?.me || []
+  console.log(userData);
 
-
-  const { data, isLoading } = useQuery('userData', async () => {
-    const { data } = await QUERY_SINGLEUSER();
-    setUserData(data);
-    return data;
-  });
-  
-
-  const mutation = useMutation((bookId) => DELETE_BOOK(bookId), {
-    onSuccess: () => {
-      removeBookId();
-    },
-  });
-
-  const handleDeleteBook = (bookId) => {
-    mutation.mutate(bookId);
+  const  [removeBook]  = useMutation(DELETE_BOOK, {
+    update(cache, { data: { removeBook }}) {
+      try {
+        cache.writeQuery({
+          query: QUERY_SINGLEUSER,
+          data: { me: removeBook }
+        })
+      } catch (e) {
+        console.error(e);
+    }
   }
+  })
 
-  if (isLoading) {
+  const handleDeleteBook = async (bookId) => {
+    const token = Auth.loggedIn() ? Auth.getToken() : null;
+
+    if (!token) {
+      return false;
+    }
+
+    try {
+      await removeBook({
+        variables: { bookId }
+      });
+      console.log(userData);
+      // upon success, remove book's id from localStorage
+      removeBookId(bookId);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  // if data isn't here yet, say so
+  if (loading) {
     return <h2>LOADING...</h2>;
   }
 
