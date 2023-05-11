@@ -31,18 +31,13 @@ input BookInput {
   title: String!
 }
 
-input LoginInput {
-  email: String!
-  password: String!
-}
-
 type Query {
   getSingleUser: User
 }
 
 type Mutation {
   createUser(username: String!, email: String!, password: String!): Auth
-  login(input: LoginInput!): Auth
+  login(email: String!, password: String!): Auth
   saveBook(body: BookInput!): User
   deleteBook(bookId: String!): User
 }

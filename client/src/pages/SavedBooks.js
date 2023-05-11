@@ -16,14 +16,25 @@ import Auth from '../utils/auth';
 import { removeBookId } from '../utils/localStorage';
 
 const SavedBooks = () => {
-  // const [userData, setUserData] = useState({});
-  // const { loading, data } = useQuery(QUERY_SINGLEUSER);
+  const [userData, setUserData] = useState({});
+  const { loading, data } = useQuery('userData', () => {
+    const { data } = QUERY_SINGLEUSER();
+    setUserData(data);
+    return data;
+  });
 
-  const { loading, userData } = useQuery(QUERY_SINGLEUSER);
+  
+  
 
+  // const userData = data?.getSingleUser || {};
+
+  // const { loading, userData } = useQuery(QUERY_SINGLEUSER);
+
+  // const [getUser, { error, data }] = useQuery(QUERY_SINGLEUSER);
 
   // // use this to determine if `useEffect()` hook needs to run again
   // const userDataLength = Object.keys(userData).length;
+
   // useEffect(() => {
   //   const getUserData = async () => {
   //     try {
@@ -39,39 +50,45 @@ const SavedBooks = () => {
   //         throw new Error('something went wrong!');
   //       }
 
-  //       const user = await response.json();
+  //       const user = response.data.singleUser;
   //       setUserData(user);
+
+  //       // const user = await response.json();
+  //       // setUserData(user);
   //     } catch (err) {
   //       console.error(err);
   //     }
   //   };
 
   //   getUserData();
-  // }, [userDataLength]);
+  // }, []);
+  // userDataLength
+
+  
 
   // create function that accepts the book's mongo _id value as param and deletes the book from the database
-  const handleDeleteBook = async (bookId) => {
-    const token = Auth.loggedIn() ? Auth.getToken() : null;
+  // const handleDeleteBook = async (bookId) => {
+  //   const token = Auth.loggedIn() ? Auth.getToken() : null;
 
-    if (!token) {
-      return false;
-    }
+  //   if (!token) {
+  //     return false;
+  //   }
 
-    try {
-      const response = await deleteBook(bookId, token);
+  //   try {
+  //     const response = await deleteBook(bookId, token);
 
-      if (!response.ok) {
-        throw new Error('something went wrong!');
-      }
+  //     if (!response.ok) {
+  //       throw new Error('something went wrong!');
+  //     }
 
-      const updatedUser = await response.json();
-      // setUserData(updatedUser);
-      // upon success, remove book's id from localStorage
-      removeBookId(bookId);
-    } catch (err) {
-      console.error(err);
-    }
-  };
+  //     const updatedUser = await response.json();
+  //     // setUserData(updatedUser);
+  //     // upon success, remove book's id from localStorage
+  //     removeBookId(bookId);
+  //   } catch (err) {
+  //     console.error(err);
+  //   }
+  // };
 
   // if data isn't here yet, say so
   if (loading) {
@@ -92,7 +109,7 @@ const SavedBooks = () => {
             : 'You have no saved books!'}
         </h2>
         <Row>
-          {userData.savedBooks.map((book) => {
+          {/* {userData.savedBooks.map((book) => {
             return (
               <Col md="4">
                 <Card key={book.bookId} border='dark'>
@@ -108,7 +125,7 @@ const SavedBooks = () => {
                 </Card>
               </Col>
             );
-          })}
+          })} */}
         </Row>
       </Container>
     </>
